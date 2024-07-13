@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// jug.sol -- Dai Lending Rate
+/// jug.sol -- USDai Lending Rate
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -18,10 +18,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 pragma solidity ^0.6.12;
-
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
 
 interface VatLike {
     function ilks(bytes32) external returns (

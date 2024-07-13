@@ -17,10 +17,6 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface VatLike {
     function file(bytes32, bytes32, uint) external;
 }
@@ -48,7 +44,7 @@ contract Spotter {
     mapping (bytes32 => Ilk) public ilks;
 
     VatLike public vat;  // CDP Engine
-    uint256 public par;  // ref per dai [ray]
+    uint256 public par;  // ref per usdai [ray]
 
     uint256 public live;
 

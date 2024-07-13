@@ -19,10 +19,6 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface GemLike {
     function decimals() external view returns (uint);
     function transfer(address,uint) external returns (bool);
@@ -49,7 +45,7 @@ interface VatLike {
 
       - `ETHJoin`: For native Ether.
 
-      - `DaiJoin`: For connecting internal Dai balances to an external
+      - `USDaiJoin`: For connecting internal USDai balances to an external
                    `DSToken` implementation.
 
     In practice, adapter implementations will be varied and specific to
@@ -120,7 +116,7 @@ contract GemJoin {
     }
 }
 
-contract DaiJoin {
+contract USDaiJoin {
     // --- Auth ---
     mapping (address => uint) public wards;
     function rely(address usr) external auth {
@@ -132,12 +128,12 @@ contract DaiJoin {
         emit Deny(usr);
     }
     modifier auth {
-        require(wards[msg.sender] == 1, "DaiJoin/not-authorized");
+        require(wards[msg.sender] == 1, "USDaiJoin/not-authorized");
         _;
     }
 
     VatLike public vat;      // CDP Engine
-    DSTokenLike public dai;  // Stablecoin Token
+    DSTokenLike public usdai;  // Stablecoin Token
     uint    public live;     // Active Flag
 
     // Events
@@ -147,11 +143,11 @@ contract DaiJoin {
     event Exit(address indexed usr, uint256 wad);
     event Cage();
 
-    constructor(address vat_, address dai_) public {
+    constructor(address vat_, address usdai_) public {
         wards[msg.sender] = 1;
         live = 1;
         vat = VatLike(vat_);
-        dai = DSTokenLike(dai_);
+        usdai = DSTokenLike(usdai_);
     }
     function cage() external auth {
         live = 0;
@@ -163,13 +159,13 @@ contract DaiJoin {
     }
     function join(address usr, uint wad) external {
         vat.move(address(this), usr, mul(ONE, wad));
-        dai.burn(msg.sender, wad);
+        usdai.burn(msg.sender, wad);
         emit Join(usr, wad);
     }
     function exit(address usr, uint wad) external {
-        require(live == 1, "DaiJoin/not-live");
+        require(live == 1, "USDaiJoin/not-live");
         vat.move(msg.sender, address(this), mul(ONE, wad));
-        dai.mint(usr, wad);
+        usdai.mint(usr, wad);
         emit Exit(usr, wad);
     }
 }

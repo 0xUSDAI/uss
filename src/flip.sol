@@ -19,10 +19,6 @@
 
 pragma solidity >=0.5.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface VatLike {
     function move(address,address,uint256) external;
     function flux(bytes32,address,address,uint256) external;
@@ -33,13 +29,13 @@ interface CatLike {
 }
 
 /*
-   This thing lets you flip some gems for a given amount of dai.
-   Once the given amount of dai is raised, gems are forgone instead.
+   This thing lets you flip some gems for a given amount of usdai.
+   Once the given amount of usdai is raised, gems are forgone instead.
 
  - `lot` gems in return for bid
- - `tab` total dai wanted
- - `bid` dai paid
- - `gal` receives dai income
+ - `tab` total usdai wanted
+ - `bid` usdai paid
+ - `gal` receives usdai income
  - `usr` receives gem forgone
  - `ttl` single bid lifetime
  - `beg` minimum bid increase
@@ -58,14 +54,14 @@ contract Flipper {
 
     // --- Data ---
     struct Bid {
-        uint256 bid;  // dai paid                 [rad]
+        uint256 bid;  // usdai paid                 [rad]
         uint256 lot;  // gems in return for bid   [wad]
         address guy;  // high bidder
         uint48  tic;  // bid expiry time          [unix epoch time]
         uint48  end;  // auction expiry time      [unix epoch time]
         address usr;
         address gal;
-        uint256 tab;  // total dai wanted         [rad]
+        uint256 tab;  // total usdai wanted         [rad]
     }
 
     mapping (uint256 => Bid) public bids;

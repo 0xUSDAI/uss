@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// pot.sol -- Dai Savings Rate
+/// pot.sol -- USDai Savings Rate
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -19,25 +19,21 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 /*
-   "Savings Dai" is obtained when Dai is deposited into
-   this contract. Each "Savings Dai" accrues Dai interest
-   at the "Dai Savings Rate".
+   "Savings USDai" is obtained when USDai is deposited into
+   this contract. Each "Savings USDai" accrues USDai interest
+   at the "USDai Savings Rate".
 
    This contract does not implement a user tradeable token
    and is intended to be used with adapters.
 
-         --- `save` your `dai` in the `pot` ---
+         --- `save` your `usdai` in the `pot` ---
 
-   - `dsr`: the Dai Savings Rate
-   - `pie`: user balance of Savings Dai
+   - `dsr`: the USDai Savings Rate
+   - `pie`: user balance of Savings USDai
 
-   - `join`: start saving some dai
-   - `exit`: remove some dai
+   - `join`: start saving some usdai
+   - `exit`: remove some usdai
    - `drip`: perform rate collection
 
 */
@@ -58,10 +54,10 @@ contract Pot {
     }
 
     // --- Data ---
-    mapping (address => uint256) public pie;  // Normalised Savings Dai [wad]
+    mapping (address => uint256) public pie;  // Normalised Savings USDai [wad]
 
-    uint256 public Pie;   // Total Normalised Savings Dai  [wad]
-    uint256 public dsr;   // The Dai Savings Rate          [ray]
+    uint256 public Pie;   // Total Normalised Savings USDai  [wad]
+    uint256 public dsr;   // The USDai Savings Rate          [ray]
     uint256 public chi;   // The Rate Accumulator          [ray]
 
     VatLike public vat;   // CDP Engine
@@ -150,7 +146,7 @@ contract Pot {
         vat.suck(address(vow), address(this), _mul(Pie, chi_));
     }
 
-    // --- Savings Dai Management ---
+    // --- Savings USDai Management ---
     function join(uint wad) external {
         require(now == rho, "Pot/rho-not-updated");
         pie[msg.sender] = _add(pie[msg.sender], wad);

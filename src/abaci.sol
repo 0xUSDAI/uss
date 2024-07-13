@@ -2,7 +2,7 @@
 
 /// abaci.sol -- price decrease functions for auctions
 
-// Copyright (C) 2020-2022 Dai Foundation
+// Copyright (C) 2020-2022 USDai Foundation
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
@@ -132,7 +132,7 @@ contract StairstepExponentialDecrease is Abacus {
         require(y == 0 || z / y == x);
         z = z / RAY;
     }
-    // optimized version from dss PR #78
+    // optimized version from uss PR #78
     function rpow(uint256 x, uint256 n, uint256 b) internal pure returns (uint256 z) {
         assembly {
             switch n case 0 { z := b }
@@ -220,7 +220,7 @@ contract ExponentialDecrease is Abacus {
         require(y == 0 || z / y == x);
         z = z / RAY;
     }
-    // optimized version from dss PR #78
+    // optimized version from uss PR #78
     function rpow(uint256 x, uint256 n, uint256 b) internal pure returns (uint256 z) {
         assembly {
             switch n case 0 { z := b }

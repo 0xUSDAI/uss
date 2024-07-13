@@ -19,10 +19,6 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface VatLike {
     function move(address,address,uint) external;
     function suck(address,address,uint) external;
@@ -36,11 +32,11 @@ interface VowLike {
 }
 
 /*
-   This thing creates gems on demand in return for dai.
+   This thing creates gems on demand in return for usdai.
 
  - `lot` gems in return for bid
- - `bid` dai paid
- - `gal` receives dai income
+ - `bid` usdai paid
+ - `gal` receives usdai income
  - `ttl` single bid lifetime
  - `beg` minimum bid increase
  - `end` max auction duration
@@ -58,7 +54,7 @@ contract Flopper {
 
     // --- Data ---
     struct Bid {
-        uint256 bid;  // dai paid                [rad]
+        uint256 bid;  // usdai paid                [rad]
         uint256 lot;  // gems in return for bid  [wad]
         address guy;  // high bidder
         uint48  tic;  // bid expiry time         [unix epoch time]

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// vow.sol -- Dai settlement module
+/// vow.sol -- USDai settlement module
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -19,10 +19,6 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface FlopLike {
     function kick(address gal, uint lot, uint bid) external returns (uint);
     function cage() external;
@@ -36,7 +32,7 @@ interface FlapLike {
 }
 
 interface VatLike {
-    function dai (address) external view returns (uint);
+    function usdai (address) external view returns (uint);
     function sin (address) external view returns (uint);
     function heal(uint256) external;
     function hope(address) external;
@@ -126,13 +122,13 @@ contract Vow {
 
     // Debt settlement
     function heal(uint rad) external {
-        require(rad <= vat.dai(address(this)), "Vow/insufficient-surplus");
+        require(rad <= vat.usdai(address(this)), "Vow/insufficient-surplus");
         require(rad <= sub(sub(vat.sin(address(this)), Sin), Ash), "Vow/insufficient-debt");
         vat.heal(rad);
     }
     function kiss(uint rad) external {
         require(rad <= Ash, "Vow/not-enough-ash");
-        require(rad <= vat.dai(address(this)), "Vow/insufficient-surplus");
+        require(rad <= vat.usdai(address(this)), "Vow/insufficient-surplus");
         Ash = sub(Ash, rad);
         vat.heal(rad);
     }
@@ -140,13 +136,13 @@ contract Vow {
     // Debt auction
     function flop() external returns (uint id) {
         require(sump <= sub(sub(vat.sin(address(this)), Sin), Ash), "Vow/insufficient-debt");
-        require(vat.dai(address(this)) == 0, "Vow/surplus-not-zero");
+        require(vat.usdai(address(this)) == 0, "Vow/surplus-not-zero");
         Ash = add(Ash, sump);
         id = flopper.kick(address(this), dump, sump);
     }
     // Surplus auction
     function flap() external returns (uint id) {
-        require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
+        require(vat.usdai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
         require(sub(sub(vat.sin(address(this)), Sin), Ash) == 0, "Vow/debt-not-zero");
         id = flapper.kick(bump, 0);
     }
@@ -156,8 +152,8 @@ contract Vow {
         live = 0;
         Sin = 0;
         Ash = 0;
-        flapper.cage(vat.dai(address(flapper)));
+        flapper.cage(vat.usdai(address(flapper)));
         flopper.cage();
-        vat.heal(min(vat.dai(address(this)), vat.sin(address(this))));
+        vat.heal(min(vat.usdai(address(this)), vat.sin(address(this))));
     }
 }

@@ -3,7 +3,7 @@
 /// flap.sol -- Surplus auction
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
-// Copyright (C) 2022 Dai Foundation
+// Copyright (C) 2022 USDai Foundation
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,6 @@
 
 pragma solidity ^0.6.12;
 
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
-
 interface VatLike {
     function move(address,address,uint) external;
 }
@@ -33,9 +29,9 @@ interface GemLike {
 }
 
 /*
-   This thing lets you sell some dai in return for gems.
+   This thing lets you sell some usdai in return for gems.
 
- - `lot` dai in return for bid
+ - `lot` usdai in return for bid
  - `bid` gems paid
  - `ttl` single bid lifetime
  - `beg` minimum bid increase
@@ -55,7 +51,7 @@ contract Flapper {
     // --- Data ---
     struct Bid {
         uint256 bid;  // gems paid               [wad]
-        uint256 lot;  // dai in return for bid   [rad]
+        uint256 lot;  // usdai in return for bid   [rad]
         address guy;  // high bidder
         uint48  tic;  // bid expiry time         [unix epoch time]
         uint48  end;  // auction expiry time     [unix epoch time]
@@ -72,8 +68,8 @@ contract Flapper {
     uint48   public   tau = 2 days;   // 2 days total auction length  [seconds]
     uint256  public kicks = 0;
     uint256  public live;  // Active Flag
-    uint256  public lid;   // max dai to be in auction at one time  [rad]
-    uint256  public fill;  // current dai in auction                [rad]
+    uint256  public lid;   // max usdai to be in auction at one time  [rad]
+    uint256  public fill;  // current usdai in auction                [rad]
 
     // --- Events ---
     event Kick(

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// vat.sol -- Dai CDP database
+/// vat.sol -- USDai CDP database
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -18,10 +18,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 pragma solidity ^0.6.12;
-
-// FIXME: This contract was altered compared to the production version.
-// It doesn't use LibNote anymore.
-// New deployments of this contract will need to include custom events (TO DO).
 
 contract Vat {
     // --- Auth ---
@@ -56,11 +52,11 @@ contract Vat {
     mapping (bytes32 => Ilk)                       public ilks;
     mapping (bytes32 => mapping (address => Urn )) public urns;
     mapping (bytes32 => mapping (address => uint)) public gem;  // [wad]
-    mapping (address => uint256)                   public dai;  // [rad]
+    mapping (address => uint256)                   public usdai;  // [rad]
     mapping (address => uint256)                   public sin;  // [rad]
 
-    uint256 public debt;  // Total Dai Issued    [rad]
-    uint256 public vice;  // Total Unbacked Dai  [rad]
+    uint256 public debt;  // Total USDai Issued    [rad]
+    uint256 public vice;  // Total Unbacked USDai  [rad]
     uint256 public Line;  // Total Debt Ceiling  [rad]
     uint256 public live;  // Active Flag
 
@@ -128,8 +124,8 @@ contract Vat {
     }
     function move(address src, address dst, uint256 rad) external {
         require(wish(src, msg.sender), "Vat/not-allowed");
-        dai[src] = _sub(dai[src], rad);
-        dai[dst] = _add(dai[dst], rad);
+        usdai[src] = _sub(usdai[src], rad);
+        usdai[dst] = _add(usdai[dst], rad);
     }
 
     function either(bool x, bool y) internal pure returns (bool z) {
@@ -173,7 +169,7 @@ contract Vat {
         require(either(urn.art == 0, tab >= ilk.dust), "Vat/dust");
 
         gem[i][v] = _sub(gem[i][v], dink);
-        dai[w]    = _add(dai[w],    dtab);
+        usdai[w]    = _add(usdai[w],    dtab);
 
         urns[i][u] = urn;
         ilks[i]    = ilk;
@@ -223,13 +219,13 @@ contract Vat {
     function heal(uint rad) external {
         address u = msg.sender;
         sin[u] = _sub(sin[u], rad);
-        dai[u] = _sub(dai[u], rad);
+        usdai[u] = _sub(usdai[u], rad);
         vice   = _sub(vice,   rad);
         debt   = _sub(debt,   rad);
     }
     function suck(address u, address v, uint rad) external auth {
         sin[u] = _add(sin[u], rad);
-        dai[v] = _add(dai[v], rad);
+        usdai[v] = _add(usdai[v], rad);
         vice   = _add(vice,   rad);
         debt   = _add(debt,   rad);
     }
@@ -240,7 +236,7 @@ contract Vat {
         Ilk storage ilk = ilks[i];
         ilk.rate = _add(ilk.rate, rate);
         int rad  = _mul(ilk.Art, rate);
-        dai[u]   = _add(dai[u], rad);
+        usdai[u]   = _add(usdai[u], rad);
         debt     = _add(debt,   rad);
     }
 }
